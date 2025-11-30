@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   tests:
-    name: Maven Tests
+    name: Surefire Maven Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -15,4 +15,4 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - run: mvn -B test
+      - run: mvn surefire:test
