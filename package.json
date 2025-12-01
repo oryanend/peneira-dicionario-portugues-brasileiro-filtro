@@ -11,7 +11,8 @@
     }
   },
   "scripts": {
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "prepare": "husky"
   },
   "dependencies": {
     "lint-staged": "^16.2.7"
