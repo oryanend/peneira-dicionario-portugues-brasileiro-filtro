@@ -8,10 +8,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WordService {
+
   @Autowired private WordRepository wordRepository;
 
   @Transactional(readOnly = true)
   public Word getRandomWord() {
     return wordRepository.findRandomWord();
+  }
+
+  @Transactional(readOnly = true)
+  public Word getRandomWordByMaxCharSize(int wordSize) {
+    return wordRepository.findRandomWordByMaxCharSize(wordSize);
   }
 }
