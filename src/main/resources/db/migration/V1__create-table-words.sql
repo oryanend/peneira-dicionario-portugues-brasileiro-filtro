@@ -1,4 +1,4 @@
 CREATE TABLE words(
-    id SERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     word VARCHAR(255) NOT NULL
 );
