@@ -53,7 +53,7 @@ public class WordControllerTest {
 
   @Test
   public void getWordsSizeWhenSizeNotFoundReturnStatusCodeNotFound() throws Exception {
-    int wordSize = 2;
+    int wordSize = 4;
 
     ResultActions result =
         mockMvc.perform(get("/words?wordSize=" + wordSize).accept(MediaType.APPLICATION_JSON));
