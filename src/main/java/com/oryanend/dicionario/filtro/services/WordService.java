@@ -36,4 +36,14 @@ public class WordService {
                 new ResourceNotFoundException(
                     "Não foi possível encontrar uma palavra com o tamanho máximo especificado."));
   }
+
+  @Transactional(readOnly = true)
+  public Word getRandomWordByEqualCharSize(int charSize) {
+    return repository
+        .findRandomWordByEqualCharSize(charSize)
+        .orElseThrow(
+            () ->
+                new ResourceNotFoundException(
+                    "Não foi possível encontrar uma palavra com o tamanho máximo especificado."));
+  }
 }
