@@ -69,6 +69,39 @@ public class WordControllerTest {
         .andExpect(jsonPath("$.timestamp").exists());
   }
 
+  @Test
+  public void getWordsMinCharShouldReturnWordGreaterOrEqualToMinChar() throws Exception {
+    int minChar = 7;
+
+    ResultActions result =
+        mockMvc.perform(get("/words?minChar=" + minChar).accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.word").isNotEmpty())
+        .andExpect(jsonPath("$.word").isString())
+        .andExpect(jsonPath("$.word").exists())
+        .andExpect(jsonPath("$.word", greaterOrEqualLength(minChar)));
+  }
+
+  @Test
+  public void getWordsMinCharWhenMinCharNotFoundShouldThrowNotFoundException() throws Exception {
+    int minChar = 12;
+
+    ResultActions result =
+        mockMvc.perform(get("/words?minChar=" + minChar).accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error").value("Resource not found"))
+        .andExpect(
+            jsonPath("$.message")
+                .value("Não foi possível encontrar uma palavra com o tamanho máximo especificado."))
+        .andExpect(jsonPath("$.status").value(404))
+        .andExpect(jsonPath("$.path").value("/words"))
+        .andExpect(jsonPath("$.timestamp").exists());
+  }
+
   private Matcher<Object> hasLengthLessOrEqualTo(int max) {
     return new TypeSafeMatcher<>() {
       @Override
@@ -79,6 +112,20 @@ public class WordControllerTest {
       @Override
       public void describeTo(Description description) {
         description.appendText("a string with length <= " + max);
+      }
+    };
+  }
+
+  public static Matcher<String> greaterOrEqualLength(int minLength) {
+    return new TypeSafeMatcher<>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("string length >= " + minLength);
+      }
+
+      @Override
+      protected boolean matchesSafely(String item) {
+        return item != null && item.length() >= minLength;
       }
     };
   }
