@@ -26,7 +26,7 @@ public class WordControllerTest {
   @Autowired private MockMvc mockMvc;
 
   @Test
-  public void getWordsShouldReturnStatusCodeOK() throws Exception {
+  public void getWordsShouldReturnRandomWord() throws Exception {
     ResultActions result = mockMvc.perform(get("/words").accept(MediaType.APPLICATION_JSON));
 
     result
@@ -37,7 +37,7 @@ public class WordControllerTest {
   }
 
   @Test
-  public void getWordsWithSizeShouldReturnWordSorted() throws Exception {
+  public void getWordsMaxCharShouldReturnWordLessOrEqualToMaxChar() throws Exception {
     int maxChar = 6;
 
     ResultActions result =
@@ -52,7 +52,7 @@ public class WordControllerTest {
   }
 
   @Test
-  public void getWordsSizeWhenSizeNotFoundReturnStatusCodeNotFound() throws Exception {
+  public void getWordsMaxCharWhenMaxCharNotFoundShouldThrowNotFoundException() throws Exception {
     int maxChar = 2;
 
     ResultActions result =
@@ -69,6 +69,87 @@ public class WordControllerTest {
         .andExpect(jsonPath("$.timestamp").exists());
   }
 
+  @Test
+  public void getWordsMinCharShouldReturnWordGreaterOrEqualToMinChar() throws Exception {
+    int minChar = 7;
+
+    ResultActions result =
+        mockMvc.perform(get("/words?minChar=" + minChar).accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.word").isNotEmpty())
+        .andExpect(jsonPath("$.word").isString())
+        .andExpect(jsonPath("$.word").exists())
+        .andExpect(jsonPath("$.word", greaterOrEqualLength(minChar)));
+  }
+
+  @Test
+  public void getWordsMinCharWhenMinCharNotFoundShouldThrowNotFoundException() throws Exception {
+    int minChar = 12;
+
+    ResultActions result =
+        mockMvc.perform(get("/words?minChar=" + minChar).accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error").value("Resource not found"))
+        .andExpect(
+            jsonPath("$.message")
+                .value("Não foi possível encontrar uma palavra com o tamanho máximo especificado."))
+        .andExpect(jsonPath("$.status").value(404))
+        .andExpect(jsonPath("$.path").value("/words"))
+        .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  @Test
+  public void getWordsCharSizeShouldReturnWordEqualToCharSize() throws Exception {
+    int charSize = 7;
+
+    ResultActions result =
+        mockMvc.perform(get("/words?charSize=" + charSize).accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.word").isNotEmpty())
+        .andExpect(jsonPath("$.word").isString())
+        .andExpect(jsonPath("$.word").exists())
+        .andExpect(jsonPath("$.word", equalLength(charSize)));
+  }
+
+  @Test
+  public void getWordsCharSizeWhenCharSizeNotFoundShouldThrowNotFoundException() throws Exception {
+    int charSize = 12;
+
+    ResultActions result =
+        mockMvc.perform(get("/words?charSize=" + charSize).accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error").value("Resource not found"))
+        .andExpect(
+            jsonPath("$.message")
+                .value("Não foi possível encontrar uma palavra com o tamanho máximo especificado."))
+        .andExpect(jsonPath("$.status").value(404))
+        .andExpect(jsonPath("$.path").value("/words"))
+        .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  public static Matcher<String> equalLength(int length) {
+    return new TypeSafeMatcher<>() {
+
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("string length equal to " + length);
+      }
+
+      @Override
+      protected boolean matchesSafely(String item) {
+        return item != null && item.length() == length;
+      }
+    };
+  }
+
   private Matcher<Object> hasLengthLessOrEqualTo(int max) {
     return new TypeSafeMatcher<>() {
       @Override
@@ -79,6 +160,20 @@ public class WordControllerTest {
       @Override
       public void describeTo(Description description) {
         description.appendText("a string with length <= " + max);
+      }
+    };
+  }
+
+  public static Matcher<String> greaterOrEqualLength(int minLength) {
+    return new TypeSafeMatcher<>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("string length >= " + minLength);
+      }
+
+      @Override
+      protected boolean matchesSafely(String item) {
+        return item != null && item.length() >= minLength;
       }
     };
   }
