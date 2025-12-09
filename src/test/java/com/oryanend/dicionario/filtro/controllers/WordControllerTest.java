@@ -177,4 +177,57 @@ public class WordControllerTest {
       }
     };
   }
+
+  @Test
+  public void getWordsWithMultipleParamsShouldThrowInvalidParameterException() throws Exception {
+    ResultActions result =
+        mockMvc.perform(get("/words?maxChar=5&minChar=3").accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("Invalid parameter"))
+        .andExpect(
+            jsonPath("$.message")
+                .value(
+                    "Apenas um parâmetro de filtro pode ser usado por vez (maxChar, minChar ou charSize)."))
+        .andExpect(jsonPath("$.status").value(400))
+        .andExpect(jsonPath("$.path").value("/words"))
+        .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  @Test
+  public void getWordsWithAllParamsShouldThrowInvalidParameterException() throws Exception {
+    ResultActions result =
+        mockMvc.perform(
+            get("/words?maxChar=5&minChar=3&charSize=4").accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("Invalid parameter"))
+        .andExpect(
+            jsonPath("$.message")
+                .value(
+                    "Apenas um parâmetro de filtro pode ser usado por vez (maxChar, minChar ou charSize)."))
+        .andExpect(jsonPath("$.status").value(400))
+        .andExpect(jsonPath("$.path").value("/words"))
+        .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  @Test
+  public void getWordsWithMaxCharAndCharSizeShouldThrowInvalidParameterException()
+      throws Exception {
+    ResultActions result =
+        mockMvc.perform(get("/words?maxChar=5&charSize=4").accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("Invalid parameter"))
+        .andExpect(
+            jsonPath("$.message")
+                .value(
+                    "Apenas um parâmetro de filtro pode ser usado por vez (maxChar, minChar ou charSize)."))
+        .andExpect(jsonPath("$.status").value(400))
+        .andExpect(jsonPath("$.path").value("/words"))
+        .andExpect(jsonPath("$.timestamp").exists());
+  }
 }

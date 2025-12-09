@@ -1,6 +1,7 @@
 package com.oryanend.dicionario.filtro.controllers.exceptions;
 
 import com.oryanend.dicionario.filtro.services.exceptions.DatabaseException;
+import com.oryanend.dicionario.filtro.services.exceptions.InvalidParameterException;
 import com.oryanend.dicionario.filtro.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
@@ -27,6 +28,18 @@ public class ControllerExceptionHandler {
   @ExceptionHandler(DatabaseException.class)
   public ResponseEntity<StandardError> database(DatabaseException e, HttpServletRequest request) {
     String error = "Database error";
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+    StandardError err =
+        new StandardError(
+            Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+
+    return ResponseEntity.status(status).body(err);
+  }
+
+  @ExceptionHandler(InvalidParameterException.class)
+  public ResponseEntity<StandardError> invalidParameter(
+      InvalidParameterException e, HttpServletRequest request) {
+    String error = "Invalid parameter";
     HttpStatus status = HttpStatus.BAD_REQUEST;
     StandardError err =
         new StandardError(

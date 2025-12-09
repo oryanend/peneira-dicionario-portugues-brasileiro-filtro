@@ -2,6 +2,7 @@ package com.oryanend.dicionario.filtro.controllers;
 
 import com.oryanend.dicionario.filtro.dto.WordDTO;
 import com.oryanend.dicionario.filtro.services.WordService;
+import com.oryanend.dicionario.filtro.services.exceptions.InvalidParameterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,16 @@ public class WordController {
       @RequestParam(required = false, defaultValue = "0") int maxChar,
       @RequestParam(required = false, defaultValue = "0") int minChar,
       @RequestParam(required = false, defaultValue = "0") int charSize) {
+    int paramCount = 0;
+    if (maxChar > 0) paramCount++;
+    if (minChar > 0) paramCount++;
+    if (charSize > 0) paramCount++;
+
+    if (paramCount > 1) {
+      throw new InvalidParameterException(
+          "Apenas um parâmetro de filtro pode ser usado por vez (maxChar, minChar ou charSize).");
+    }
+
     if (maxChar > 0) {
       WordDTO dto = new WordDTO(wordService.getRandomWordByMaxCharSize(maxChar));
       return ResponseEntity.ok().body(dto);
