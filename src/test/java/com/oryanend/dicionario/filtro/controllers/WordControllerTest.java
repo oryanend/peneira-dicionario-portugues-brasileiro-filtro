@@ -63,7 +63,7 @@ public class WordControllerTest {
         .andExpect(jsonPath("$.error").value("Resource not found"))
         .andExpect(
             jsonPath("$.message")
-                .value("Não foi possível encontrar uma palavra com o tamanho máximo especificado."))
+                .value("Não foi possível encontrar uma palavra com o tamanho máximo especificado"))
         .andExpect(jsonPath("$.status").value(404))
         .andExpect(jsonPath("$.path").value("/words"))
         .andExpect(jsonPath("$.timestamp").exists());
@@ -96,7 +96,7 @@ public class WordControllerTest {
         .andExpect(jsonPath("$.error").value("Resource not found"))
         .andExpect(
             jsonPath("$.message")
-                .value("Não foi possível encontrar uma palavra com o tamanho máximo especificado."))
+                .value("Não foi possível encontrar uma palavra com o tamanho mínimo especificado"))
         .andExpect(jsonPath("$.status").value(404))
         .andExpect(jsonPath("$.path").value("/words"))
         .andExpect(jsonPath("$.timestamp").exists());
@@ -129,10 +129,118 @@ public class WordControllerTest {
         .andExpect(jsonPath("$.error").value("Resource not found"))
         .andExpect(
             jsonPath("$.message")
-                .value("Não foi possível encontrar uma palavra com o tamanho máximo especificado."))
+                .value("Não foi possível encontrar uma palavra com o tamanho especificado"))
         .andExpect(jsonPath("$.status").value(404))
         .andExpect(jsonPath("$.path").value("/words"))
         .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  @Test
+  public void getWordsWhenMinCharGreaterThanMaxCharShouldThrowInvalidParameterException()
+      throws Exception {
+    int minChar = 8;
+    int maxChar = 5;
+
+    ResultActions result =
+        mockMvc.perform(
+            get("/words?minChar=" + minChar + "&maxChar=" + maxChar)
+                .accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("Invalid Param error"))
+        .andExpect(
+            jsonPath("$.message")
+                .value("O valor mínimo de caracteres não pode ser maior que o valor máximo"))
+        .andExpect(jsonPath("$.status").value(400))
+        .andExpect(jsonPath("$.path").value("/words"))
+        .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  @Test
+  public void getWordsWhenCharSizeCombinedWithMinShouldThrowInvalidParameterException()
+      throws Exception {
+    int charSize = 5;
+    int minChar = 3;
+
+    ResultActions result =
+        mockMvc.perform(
+            get("/words?charSize=" + charSize + "&minChar=" + minChar)
+                .accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("Invalid Param error"))
+        .andExpect(
+            jsonPath("$.message")
+                .value("Os valores não podem ser combinados, charSize deve ser usado sozinho"))
+        .andExpect(jsonPath("$.status").value(400))
+        .andExpect(jsonPath("$.path").value("/words"))
+        .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  @Test
+  public void getWordsWhenCharSizeCombinedWithMaxShouldThrowInvalidParameterException()
+      throws Exception {
+    int charSize = 5;
+    int maxChar = 7;
+
+    ResultActions result =
+        mockMvc.perform(
+            get("/words?charSize=" + charSize + "&maxChar=" + maxChar)
+                .accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("Invalid Param error"))
+        .andExpect(
+            jsonPath("$.message")
+                .value("Os valores não podem ser combinados, charSize deve ser usado sozinho"))
+        .andExpect(jsonPath("$.status").value(400))
+        .andExpect(jsonPath("$.path").value("/words"))
+        .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  @Test
+  public void getWordsWhenCharSizeCombinedWithMinAndMaxShouldThrowInvalidParameterException()
+      throws Exception {
+    int charSize = 5;
+    int minChar = 3;
+    int maxChar = 7;
+
+    ResultActions result =
+        mockMvc.perform(
+            get("/words?charSize=" + charSize + "&minChar=" + minChar + "&maxChar=" + maxChar)
+                .accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("Invalid Param error"))
+        .andExpect(
+            jsonPath("$.message")
+                .value("Os valores não podem ser combinados, charSize deve ser usado sozinho"))
+        .andExpect(jsonPath("$.status").value(400))
+        .andExpect(jsonPath("$.path").value("/words"))
+        .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  @Test
+  public void getWordsWithMinAndMaxCharShouldReturnWordBetweenMinAndMaxChar() throws Exception {
+    int minChar = 4;
+    int maxChar = 8;
+
+    ResultActions result =
+        mockMvc.perform(
+            get("/words?minChar=" + minChar + "&maxChar=" + maxChar)
+                .accept(MediaType.APPLICATION_JSON));
+
+    result
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.word").isNotEmpty())
+        .andExpect(jsonPath("$.word").isString())
+        .andExpect(jsonPath("$.word").exists())
+        .andExpect(jsonPath("$.word", greaterOrEqualLength(minChar)))
+        .andExpect(jsonPath("$.word", hasLengthLessOrEqualTo(maxChar)));
   }
 
   public static Matcher<String> equalLength(int length) {
