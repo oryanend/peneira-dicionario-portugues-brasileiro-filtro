@@ -11,21 +11,24 @@ Essa **API** tem como objetivo fornecer palavras do **dicionário da língua por
 
 ## Índice
 
-- 📑 [Casos de Uso](#-casos-de-uso)
+- 🌎 [Endpoints](#-endpoints)
 - 💻 [Tecnologias utilizadas](#-tecnologias-utilizadas)
 - 👥 [Autor](#-autor)
 
-## 📑 Casos de Uso
+## 🌎 Endpoints
 
-Os casos de uso não são muito complexos, sendo eles:
+Os endpoints não são muito complexos, sendo eles:
 
 ### Visão geral
 
-
-| Caso de uso                  | Visão geral                                                                                                                                                                                                     |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Consultar Todas As Palavras  | Quando o usuário realiza uma requisição sem aplicar nenhum filtro, a API retornará todas as palavras disponíveis no endpoint.                                                                               |
-| Consultar Palavras Filtradas | Quando o usuário realiza uma requisição com filtros, a API retornará as palavras de acordo com os critérios definidos, como o tamanho máximo das palavras e a quantidade de resultados a serem retornados. |
+| Endpoint                             | Visão geral                                                                 |
+| ------------------------------------ | ---------------------------------------------------------------------------- |
+| **GET** `/words`                     | Retorna uma palavra aleatória                                               |
+| **GET** `/words?charSize=x`          | Retorna uma palavra aleatória contendo `x` caracteres                        |
+| **GET** `/words?minChar=x`           | Retorna uma palavra aleatória contendo no mínimo `x` caracteres            |
+| **GET** `/words?maxChar=x`           | Retorna uma palavra aleatória contendo no máximo `x` caracteres             |
+| **GET** `/words?minChar=x&minChar=y` | Retorna uma palavra aleatória cujo tamanho esteja entre `x` e `y` caracteres |
+| **GET** `/status` | Retorna os status do sistema |
 
 ## 💻 Tecnologias utilizadas
 
@@ -33,6 +36,6 @@ Os casos de uso não são muito complexos, sendo eles:
 
 # 👥 Autor
 
+| [Ryan Oliveira](https://github.com/oryanend) |
+| :------------------------------------------: |
 
-| [<img src="https://avatars.githubusercontent.com/u/135620793?v=4" width=115><br><sub>Ryan Oliveira</sub>](https://github.com/oryanend) |
-| :------------------------------------------------------------------------------------------------------------------------------------: |
