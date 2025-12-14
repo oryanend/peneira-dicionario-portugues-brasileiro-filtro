@@ -24,9 +24,6 @@ public class WebController {
 
     model.addAttribute("baseUrl", baseUrl);
     model.addAttribute("displayBaseUrl", displayBaseUrl);
-
-    model.addAttribute("baseUrl", baseUrl);
-
     return "index";
   }
 }
