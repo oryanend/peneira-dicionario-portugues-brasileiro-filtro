@@ -1,20 +1,17 @@
 package com.oryanend.dicionario.filtro.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "words")
+@Table(name = "words", indexes = @Index(name = "idx_word_word", columnList = "word", unique = true))
 public class Word {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(length = 100)
   private String word;
 
   public Word() {}
