@@ -41,7 +41,7 @@ public class StatusControllerTest {
         .andExpect(jsonPath("$.dependencies.database.status").value("healthy"))
         .andExpect(jsonPath("$.dependencies.database.version").value("2.3.232"))
         .andExpect(jsonPath("$.dependencies.database.max_connections").isNumber())
-        .andExpect(jsonPath("$.dependencies.database.opened_connections").isNumber())
+        .andExpect(jsonPath("$.dependencies.database.open_connections").isNumber())
         .andExpect(jsonPath("$.dependencies.database.latency").exists())
         .andExpect(jsonPath("$.dependencies.database.latency.first_query").isNumber())
         .andExpect(jsonPath("$.dependencies.database.latency.second_query").isNumber())
