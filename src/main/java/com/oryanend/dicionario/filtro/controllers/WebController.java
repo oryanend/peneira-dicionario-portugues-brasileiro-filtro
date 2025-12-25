@@ -52,10 +52,10 @@ public class WebController {
     int serverPort = request.getServerPort();
 
     String baseUrl =
-            scheme
-                    + "://"
-                    + serverName
-                    + ((serverPort == 80 || serverPort == 443) ? "" : ":" + serverPort);
+        scheme
+            + "://"
+            + serverName
+            + ((serverPort == 80 || serverPort == 443) ? "" : ":" + serverPort);
 
     String displayBaseUrl = baseUrl.replace("http://", "").replace("https://", "");
 
