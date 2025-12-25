@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/words")
+@RequestMapping(value = "api/v1/words")
 public class WordController {
 
   @Autowired private WordService wordService;
 
-  @GetMapping
+  @GetMapping()
   public ResponseEntity<WordDTO> getRandomWord(
       @RequestParam(required = false, defaultValue = "0") int maxChar,
       @RequestParam(required = false, defaultValue = "0") int minChar,

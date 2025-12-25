@@ -21,10 +21,11 @@ import org.springframework.test.web.servlet.ResultActions;
 public class StatusControllerTest {
 
   @Autowired private MockMvc mockMvc;
+  String baseUrl = "/api/v1/status";
 
   @Test
   public void getStatusShouldReturnStatusCodeOK() throws Exception {
-    ResultActions result = mockMvc.perform(get("/status").accept(MediaType.APPLICATION_JSON));
+    ResultActions result = mockMvc.perform(get(baseUrl).accept(MediaType.APPLICATION_JSON));
 
     result
         .andExpect(status().isOk())
@@ -34,13 +35,13 @@ public class StatusControllerTest {
 
   @Test
   public void getStatusShouldReturnDependenciesDatabase() throws Exception {
-    ResultActions result = mockMvc.perform(get("/status").accept(MediaType.APPLICATION_JSON));
+    ResultActions result = mockMvc.perform(get(baseUrl).accept(MediaType.APPLICATION_JSON));
 
     result
         .andExpect(jsonPath("$.dependencies.database.status").value("healthy"))
         .andExpect(jsonPath("$.dependencies.database.version").value("2.3.232"))
         .andExpect(jsonPath("$.dependencies.database.max_connections").isNumber())
-        .andExpect(jsonPath("$.dependencies.database.opened_connections").isNumber())
+        .andExpect(jsonPath("$.dependencies.database.open_connections").isNumber())
         .andExpect(jsonPath("$.dependencies.database.latency").exists())
         .andExpect(jsonPath("$.dependencies.database.latency.first_query").isNumber())
         .andExpect(jsonPath("$.dependencies.database.latency.second_query").isNumber())
@@ -49,7 +50,7 @@ public class StatusControllerTest {
 
   @Test
   public void getStatusShouldReturnDependenciesWebserver() throws Exception {
-    ResultActions result = mockMvc.perform(get("/status").accept(MediaType.APPLICATION_JSON));
+    ResultActions result = mockMvc.perform(get(baseUrl).accept(MediaType.APPLICATION_JSON));
 
     result
         .andExpect(jsonPath("$.dependencies.webserver.status").value("healthy"))
