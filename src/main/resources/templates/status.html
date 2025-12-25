@@ -81,9 +81,9 @@
         </p>
         <p>
             Latência:
-            <span class="badge text-bg-success" th:text="${dbFirstQuery}">FIRST_QUERY</span>
-            <span class="badge text-bg-success" th:text="${dbSecondQuery}">SECOND_QUERY</span>
-            <span class="badge text-bg-success" th:text="${dbThirdQuery}">THIRD_QUERY</span>
+            <span class="badge text-bg-success" th:text="${#numbers.formatDecimal(dbFirstQuery, 1, 2)} + 'ms'">FIRST_QUERY</span>
+            <span class="badge text-bg-success" th:text="${#numbers.formatDecimal(dbSecondQuery, 1, 2)} + 'ms'">SECOND_QUERY</span>
+            <span class="badge text-bg-success" th:text="${#numbers.formatDecimal(dbThirdQuery, 1, 2)} + 'ms'">THIRD_QUERY</span>
         </p>
     </div>
     <div class="p-3">
